@@ -1,10 +1,9 @@
 .venv/
 __pycache__/
 *.pyc
-*.pyo
-.DS_Store
-output/*.md
 test_*.py
-step1_scrape.py
-custom_llm.py
-visual_scraper.py
+*.egg-info/
+dist/
+build/
+.env
+output/*.md
