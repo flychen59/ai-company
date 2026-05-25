@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub 每日高星日报 | 2026-05-26</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1a1e2e 0%, #0d1117 50%, #161b22 100%);
+    border-bottom: 1px solid #30363d;
+    margin: -20px -20px 30px -20px;
+  }
+  .header h1 { font-size: 28px; margin-bottom: 8px; }
+  .header h1 span { color: #f0883e; }
+  .header .date { color: #8b949e; font-size: 14px; }
+  .header .editors-note {
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: #161b22;
+    border-left: 3px solid #f0883e;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: #c9d1d9;
+    text-align: left;
+  }
+
+  /* Agent badges */
+  .agents {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .agent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .agent-badge.researcher { background: #1f3a5f; color: #58a6ff; }
+  .agent-badge.editor { background: #2d1f4e; color: #bc8cff; }
+  .agent-badge.analyst { background: #1a3a2a; color: #3fb950; }
+  .agent-badge.reviewer { background: #3a2a1a; color: #f0883e; }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #21262d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Project cards */
+  .project-grid { display: grid; gap: 12px; }
+  .project-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .project-card:hover { border-color: #58a6ff; }
+  .project-rank {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .rank-1 { background: linear-gradient(135deg, #f0883e, #d47616); color: #fff; }
+  .rank-2 { background: linear-gradient(135deg, #8b949e, #6e7681); color: #fff; }
+  .rank-3 { background: linear-gradient(135deg, #7c5a2a, #5a3f1a); color: #e6b87a; }
+  .rank-other { background: #21262d; color: #8b949e; }
+  .project-info h3 { font-size: 15px; margin-bottom: 4px; }
+  .project-info h3 a { color: #58a6ff; text-decoration: none; }
+  .project-info h3 a:hover { text-decoration: underline; }
+  .project-info p { font-size: 13px; color: #8b949e; }
+  .project-meta { text-align: right; white-space: nowrap; }
+  .project-stars { font-size: 16px; font-weight: 600; color: #f0883e; }
+  .project-lang { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .project-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-top: 4px;
+    background: #21262d;
+    color: #c9d1d9;
+  }
+
+  /* News */
+  .news-item {
+    padding: 12px 16px;
+    background: #161b22;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid #30363d;
+  }
+  .news-item strong { color: #58a6ff; }
+  .news-item p { font-size: 14px; color: #c9d1d9; margin-top: 4px; }
+
+  /* Language chart */
+  .lang-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .lang-bar-group { margin-bottom: 12px; }
+  .lang-bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .lang-bar-label span:first-child { font-weight: 500; }
+  .lang-bar-label span:last-child { color: #8b949e; }
+  .lang-bar { height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+  .lang-bar-fill { height: 100%; border-radius: 4px; }
+  .fill-python { background: linear-gradient(90deg, #3572A5, #4a8ad4); }
+  .fill-ts { background: linear-gradient(90deg, #3178c6, #5a9cf0); }
+  .fill-js { background: linear-gradient(90deg, #f1e05a, #e8d44d); }
+  .fill-config { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .fill-jupyter { background: linear-gradient(90deg, #DA5B0B, #f0883e); }
+  .fill-swift { background: linear-gradient(90deg, #F05138, #ff7060); }
+  .fill-shell { background: linear-gradient(90deg, #89e051, #6fbf40); }
+
+  /* Trends */
+  .trend-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .trend-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .trend-name { font-weight: 600; font-size: 15px; }
+  .trend-heat { font-size: 14px; }
+  .trend-evidence { font-size: 13px; color: #8b949e; }
+
+  /* Suggestions */
+  .suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .suggestion-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .suggestion-card h4 { font-size: 14px; color: #f0883e; margin-bottom: 8px; }
+  .suggestion-card p { font-size: 13px; color: #c9d1d9; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: #484f58;
+    font-size: 12px;
+    border-top: 1px solid #21262d;
+    margin-top: 40px;
+  }
+  .footer a { color: #58a6ff; text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .lang-chart, .suggestion-grid { grid-template-columns: 1fr; }
+    .project-card { grid-template-columns: 30px 1fr; }
+    .project-meta { grid-column: 2; text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🔥 GitHub <span>每日高星</span>日报</h1>
+    <div class="date">2026-05-26 · 由 AI 一人公司自动生成</div>
+    <div class="agents">
+      <span class="agent-badge researcher">🔍 研究员</span>
+      <span class="agent-badge editor">✍️ 编辑</span>
+      <span class="agent-badge analyst">📊 分析师</span>
+      <span class="agent-badge reviewer">👁️ 审查员</span>
+    </div>
+    <div class="editors-note">
+      今日榜单 AI 开发工具占据绝对主导，围绕 Claude Code 生态的技能文件、Agent 优化与工作流配置项目霸榜前三。代码知识图谱、金融 AI 模型等垂直赛道表现亮眼。
+    </div>
+  </div>
+
+  <!-- Top Projects -->
+  <div class="section">
+    <h2 class="section-title">📊 今日热门项目</h2>
+    <div class="project-grid">
+
+      <div class="project-card">
+        <div class="project-rank rank-1">1</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/affaan-m/ECC">affaan-m/ECC</a></h3>
+          <p>Agent 性能优化系统 — 技能、记忆、安全、研发增强，支持 Claude Code / Codex / Cursor</p>
+          <span class="project-tag">AI Agent优化</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 192,057</div>
+          <div class="project-lang">JavaScript</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-2">2</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/multica-ai/andrej-karpathy-skills">multica-ai/andrej-karpathy-skills</a></h3>
+          <p>基于 Karpathy 对 LLM 编码陷阱的观察，单文件 CLAUDE.md 优化 Claude Code 行为</p>
+          <span class="project-tag">AI编程助手</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 154,340</div>
+          <div class="project-lang">配置文件</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-3">3</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/garrytan/gstack">garrytan/gstack</a></h3>
+          <p>Garry Tan 的 Claude Code 配置：23 个工具角色 — CEO、设计师、工程经理、QA 等</p>
+          <span class="project-tag">AI开发工作流</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 102,228</div>
+          <div class="project-lang">TypeScript</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">4</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/anthropics/claude-cookbooks">anthropics/claude-cookbooks</a></h3>
+          <p>Claude 趣味高效用法的笔记本文档与示例食谱合集</p>
+          <span class="project-tag">AI应用示例</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 43,914</div>
+          <div class="project-lang">Jupyter Notebook</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">5</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/paperless-ngx/paperless-ngx">paperless-ngx/paperless-ngx</a></h3>
+          <p>社区支持的文档管理系统 — 扫描、索引、归档所有文档</p>
+          <span class="project-tag">文档管理</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 41,224</div>
+          <div class="project-lang">Python</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">6</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/moeru-ai/airi">moeru-ai/airi</a></h3>
+          <p>自托管虚拟伴侣 — 实时语音、Minecraft、Factorio，跨平台运行</p>
+          <span class="project-tag">AI虚拟伴侣</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 39,619</div>
+          <div class="project-lang">TypeScript</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">7</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/Lum1104/Understand-Anything">Lum1104/Understand-Anything</a></h3>
+          <p>把代码转为可交互知识图谱，兼容 Claude Code / Codex / Cursor 等</p>
+          <span class="project-tag">代码知识图谱</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 30,167</div>
+          <div class="project-lang">TypeScript</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">8</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/shiyu-coder/Kronos">shiyu-coder/Kronos</a></h3>
+          <p>面向金融市场语言的 Foundation Model</p>
+          <span class="project-tag">金融AI模型</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 25,972</div>
+          <div class="project-lang">Python</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">9</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/colbymchenry/codegraph">colbymchenry/codegraph</a></h3>
+          <p>预索引代码知识图谱 — 更少 Token、更少工具调用、100% 本地运行</p>
+          <span class="project-tag">代码知识图谱</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 24,533</div>
+          <div class="project-lang">TypeScript</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-rank rank-other">10</div>
+        <div class="project-info">
+          <h3><a href="https://github.com/Fincept-Corporation/FinceptTerminal">Fincept-Corporation/FinceptTerminal</a></h3>
+          <p>现代金融终端 — 市场分析、投资研究、经济数据工具</p>
+          <span class="project-tag">金融终端</span>
+        </div>
+        <div class="project-meta">
+          <div class="project-stars">⭐ 23,773</div>
+          <div class="project-lang">Python</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- News -->
+  <div class="section">
+    <h2 class="section-title">📰 相关动态</h2>
+    <div class="news-item">
+      <strong>Claude Code 生态霸榜</strong>
+      <p>前三甲均为 Claude Code 相关优化项目，从 Agent 性能优化（ECC）、Karpathy 经验沉淀的 CLAUDE.md 技能文件，到 Garry Tan 的 23 角色工作流配置，AI 编码助手的基础设施正在快速专业化。</p>
+    </div>
+    <div class="news-item">
+      <strong>代码知识图谱成新热点</strong>
+      <p>Understand-Anything 与 codegraph 双双进入前十，分别主打"交互式知识图谱"与"预索引本地优先"，解决大模型代码理解中的 Token 消耗与工具调用效率问题。</p>
+    </div>
+    <div class="news-item">
+      <strong>金融 AI 垂直赛道升温</strong>
+      <p>金融语言基础模型 Kronos 与数据终端 FinceptTerminal 同时上榜，资本市场对领域专用 AI 与交互式投研工具需求增长。</p>
+    </div>
+    <div class="news-item">
+      <strong>AI 内容质量受关注</strong>
+      <p>taste-skill 与 stop-slop 聚焦消除 AI 生成内容的"机械感"与"AI味"，反映开发者对输出质量精细化的追求。</p>
+    </div>
+  </div>
+
+  <!-- Language Distribution -->
+  <div class="section">
+    <h2 class="section-title">📈 语言分布</h2>
+    <div class="lang-chart">
+      <div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>TypeScript</span><span>25.6% Stars · 4 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-ts" style="width:51.2%"></div></div>
+        </div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>JavaScript</span><span>25.6% Stars · 2 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-js" style="width:51.2%"></div></div>
+        </div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>配置/无语言</span><span>20.7% Stars · 2 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-config" style="width:41.4%"></div></div>
+        </div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>Python</span><span>17.3% Stars · 6 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-python" style="width:34.6%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>Jupyter Notebook</span><span>5.7% Stars · 1 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-jupyter" style="width:11.4%"></div></div>
+        </div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>Swift</span><span>2.5% Stars · 1 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-swift" style="width:5%"></div></div>
+        </div>
+        <div class="lang-bar-group">
+          <div class="lang-bar-label"><span>Shell</span><span>2.5% Stars · 1 项目</span></div>
+          <div class="lang-bar"><div class="lang-bar-fill fill-shell" style="width:5%"></div></div>
+        </div>
+        <div style="margin-top:12px; padding:12px; background:#161b22; border-radius:8px; font-size:13px; color:#8b949e;">
+          💡 <strong style="color:#c9d1d9">关键发现：</strong>TS+JS 合占 51.2% Star 量主导应用层；Python 项目数最多（35.3%）覆盖垂直领域；配置类项目占 20.7% 成为新型高价值资产。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trends -->
+  <div class="section">
+    <h2 class="section-title">🔥 趋势分析</h2>
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-name">AI IDE 生态垄断头部</span>
+        <span class="trend-heat">🔥🔥🔥</span>
+      </div>
+      <div class="trend-evidence">前 3 名均为 Claude Code 优化项目，合计 <strong style="color:#f0883e">448,625 Stars</strong>（占 Top17 的 58.5%）</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-name">代码知识图谱工具化</span>
+        <span class="trend-heat">🔥🔥</span>
+      </div>
+      <div class="trend-evidence">2 个项目进入前十，主打"交互式可视化"与"预索引本地优先"</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-name">金融 AI 垂直化</span>
+        <span class="trend-heat">🔥🔥</span>
+      </div>
+      <div class="trend-evidence">金融基础模型（Kronos）+ 投研终端（FinceptTerminal）同时上榜</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-name">AI 内容去同质化</span>
+        <span class="trend-heat">🔥🔥</span>
+      </div>
+      <div class="trend-evidence">taste-skill、stop-slop 聚焦消除"AI味"，合计 23,644 Stars</div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-name">配置即代码</span>
+        <span class="trend-heat">🔥🔥</span>
+      </div>
+      <div class="trend-evidence">CLAUDE.md、skill files、角色工作流等非代码资产获得顶级流量</div>
+    </div>
+  </div>
+
+  <!-- Suggestions -->
+  <div class="section">
+    <h2 class="section-title">💡 给开发者的建议</h2>
+    <div class="suggestion-grid">
+      <div class="suggestion-card">
+        <h4>🎯 卡位 AI IDE 生态</h4>
+        <p>为 Claude Code、Cursor 等开发 Agent 性能优化、角色工作流、技能文件插件，当前处于流量红利期。</p>
+      </div>
+      <div class="suggestion-card">
+        <h4>🗺️ 代码知识图谱</h4>
+        <p>面向企业场景，提供预索引、低 Token 消耗、本地部署的代码理解基础设施。</p>
+      </div>
+      <div class="suggestion-card">
+        <h4>🏦 垂直领域 Agent</h4>
+        <p>金融、网络安全、文档管理等领域专用工具需求明确，模型层与应用层存在整合机会。</p>
+      </div>
+      <div class="suggestion-card">
+        <h4>✨ AI 内容品味层</h4>
+        <p>开发"去AI化"、风格注入、输出质量精细化的中间件，解决生成内容同质化痛点。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>数据来源：<a href="https://github.com/trending">GitHub Trending</a> · 由 <a href="https://github.com/flychen59/ai-company">AI 一人公司</a> 自动生成</p>
+    <p style="margin-top:4px;">4 Agent 全链路协作：研究员 → 编辑 → 分析师 → 审查员</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开源日报 | 2026-05-26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2128;
+            --border-subtle: #21262d;
+            --border-hover: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-orange: #f97316;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-green: #3fb950;
+            --accent-pink: #f778ba;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
+            50% { box-shadow: 0 0 40px rgba(249, 115, 22, 0.3); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes barGrow {
+            from { width: 0; }
+        }
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        .animate-slide-in {
+            animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        /* ===== Header ===== */
+        .hero-header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0c1a3a 0%, #1a0f2e 50%, #0d1117 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+        }
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.12), transparent),
+                        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(163, 113, 247, 0.08), transparent);
+            pointer-events: none;
+        }
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(88, 166, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(88, 166, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+        }
+
+        /* ===== Cards ===== */
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(88, 166, 255, 0.1);
+        }
+        .project-card:hover .card-glow {
+            opacity: 1;
+        }
+        .card-glow {
+            position: absolute;
+            inset: -1px;
+            border-radius: 14px;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(88, 166, 255, 0.08), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== Rank Badges ===== */
+        .rank-gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #b45309 100%);
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .rank-silver {
+            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 50%, #6b7280 100%);
+            box-shadow: 0 4px 20px rgba(156, 163, 175, 0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .rank-bronze {
+            background: linear-gradient(135deg, #fdba74 0%, #ea580c 50%, #c2410c 100%);
+            box-shadow: 0 4px 20px rgba(234, 88, 12, 0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .rank-normal {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-hover);
+        }
+
+        /* ===== Stars ===== */
+        .star-count {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #fb923c, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.25));
+        }
+
+        /* ===== Progress Bars ===== */
+        .lang-bar {
+            height: 8px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .lang-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+
+        /* ===== Trend Cards ===== */
+        .trend-card {
+            background: linear-gradient(145deg, rgba(220, 38, 38, 0.08), rgba(185, 28, 28, 0.03));
+            border: 1px solid rgba(220, 38, 38, 0.15);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .trend-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.06) 0%, transparent 60%);
+            animation: float 6s ease-in-out infinite;
+        }
+        .trend-card:hover {
+            border-color: rgba(220, 38, 38, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(220, 38, 38, 0.12);
+        }
+
+        /* ===== Agent Badges ===== */
+        .badge-researcher {
+            background: rgba(59, 130, 246, 0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .badge-editor {
+            background: rgba(168, 85, 247, 0.12);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        .badge-analyst {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .badge-designer {
+            background: rgba(236, 72, 153, 0.12);
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+        .badge-reviewer {
+            background: rgba(249, 115, 22, 0.12);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        /* ===== Section Divider ===== */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+        }
+
+        /* ===== Table ===== */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+        .data-table tbody tr {
+            transition: all 0.2s;
+        }
+        .data-table tbody tr:hover {
+            background: rgba(88, 166, 255, 0.03);
+        }
+        .data-table tbody tr:hover td {
+            color: var(--text-primary);
+        }
+
+        /* ===== Misc ===== */
+        .glass-pill {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        .link-hover {
+            transition: all 0.2s;
+        }
+        .link-hover:hover {
+            color: var(--accent-blue);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.75rem !important;
+            }
+            .hero-subtitle {
+                font-size: 0.875rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HERO HEADER ===== -->
+    <header class="hero-header relative">
+        <div class="hero-grid"></div>
+        
+        <!-- Decorative orbs -->
+        <div class="absolute top-10 left-[10%] w-64 h-64 rounded-full bg-blue-500/5 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-[15%] w-80 h-80 rounded-full bg-purple-500/5 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-20 md:pt-24 md:pb-28">
+            <!-- Top bar -->
+            <div class="flex flex-wrap items-center gap-3 mb-8 animate-fade-in" style="animation-delay: 0.1s;">
+                <span class="glass-pill text-xs font-mono text-blue-300 px-3 py-1.5 rounded-full">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 mr-2 animate-pulse"></span>
+                    2026-05-26
+                </span>
+                <span class="tag-pill badge-researcher">研究员</span>
+                <span class="tag-pill badge-editor">编辑</span>
+                <span class="tag-pill badge-analyst">分析师</span>
+                <span class="tag-pill badge-designer">设计师</span>
+                <span class="tag-pill badge-reviewer">审查员</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="hero-title text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight mb-5 animate-fade-in-up" style="animation-delay: 0.15s;">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-white to-purple-200">
+                    开源日报
+                </span>
+                <span class="text-white/30 mx-2 font-light">|</span>
+                <span class="text-white/90">AI Agent开发配置持续升温</span>
+            </h1>
+            <p class="hero-subtitle text-base sm:text-lg text-slate-400 max-w-3xl leading-relaxed animate-fade-in-up" style="animation-delay: 0.25s;">
+                金融与代码可视化工具崛起，开源社区正从"基础能力搭建"向"专业化、精细化、审美化"深度演进
+            </p>
+
+            <!-- Editor's Note -->
+            <div class="mt-10 max-w-3xl animate-fade-in-up" style="animation-delay: 0.35s;">
+                <div class="relative rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm p-6 sm:p-8">
+                    <div class="absolute top-0 left-8 -translate-y-1/2">
+                        <span class="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/20">
+                            编者按
+                        </span>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed text-sm sm:text-base mt-2">
+                        今日GitHub热榜显示，<strong class="text-white">AI Agent开发配置与性能优化</strong>已成为开发者最关注的焦点，前三甲均被相关工具包揽，累计星标超过<strong class="text-orange-400">45万</strong>。与此同时，金融AI垂直模型、代码知识图谱与AI内容质量优化工具增长迅猛，反映出开源社区正从"基础能力搭建"向"专业化、精细化、审美化"深度演进。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom fade -->
+        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0d1117] to-transparent pointer-events-none"></div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+
+        <!-- ===== TOP 3 PODIUM ===== -->
+        <section class="mb-16 animate-fade-in-up" style="animation-delay: 0.4s;">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">今日三甲</h2>
+                <div class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="top3-container"></div>
+        </section>
+
+        <!-- ===== FULL PROJECT TABLE ===== -->
+        <section class="mb-16 animate-fade-in-up" style="animation-delay: 0.5s;">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">完整榜单</h2>
+                <span class="text-xs text-slate-500 font-mono ml-2">17 projects</span>
+                <div class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+            </div>
+
+            <div class="rounded-2xl border border-white/5 overflow-hidden bg-[#111820]/50 backdrop-blur-sm">
+                <div class="overflow-x-auto">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="w-16 text-center">排名</th>
+                                <th>项目</th>
+                                <th class="hidden lg:table-cell">简介</th>
+                                <th class="w-24 text-center">语言</th>
+                                <th class="w-28 text-right">Stars</th>
+                                <th class="w-32 hidden sm:table-cell">分类</th>
+                            </tr>
+                        </thead>
+                        <tbody id="project-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LANGUAGE DISTRIBUTION ===== -->
+        <section class="mb-16 animate-fade-in-up" style="animation-delay: 0.6s;">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">语言分布</h2>
+                <div class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5" id="lang-cards"></div>
+        </section>
+
+        <!-- ===== TREND ANALYSIS ===== -->
+        <section class="mb-16 animate-fade-in-up" style="animation-delay: 0.7s;">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">趋势分析</h2>
+                <div class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="trend-cards"></div>
+        </section>
+
+        <!-- ===== RECOMMENDATIONS ===== -->
+        <section class="animate-fade-in-up" style="animation-delay: 0.8s;">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white">策略建议</h2>
+                <div class="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="recommend-cards"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-10 border-t border-white/5 text-center">
+            <p class="text-slate-600 text-sm font-mono">开源日报 · 2026-05-26 · Generated with care</p>
+        </footer>
+    </main>
+
+    <script>
+        // ===== DATA =====
+        const projects = [
+            { rank: 1, name: 'affaan-m/ECC', desc: 'The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.', lang: 'JavaScript', stars: 192068, category: 'AI Agent优化' },
+            { rank: 2, name: 'multica-ai/andrej-karpathy-skills', desc: 'A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy\'s observations on LLM coding pitfalls.', lang: '-', stars: 154372, category: 'AI开发配置' },
+            { rank: 3, name: 'garrytan/gstack', desc: 'Use Garry Tan\'s exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA.', lang: 'TypeScript', stars: 102233, category: 'AI开发配置' },
+            { rank: 4, name: 'anthropics/claude-cookbooks', desc: 'A collection of notebooks/recipes showcasing some fun and effective ways of using Claude.', lang: 'Jupyter Notebook', stars: 43917, category: 'AI示例教程' },
+            { rank: 5, name: 'paperless-ngx/paperless-ngx', desc: 'A community-supported supercharged document management system: scan, index and archive all your documents.', lang: 'Python', stars: 41230, category: '文档管理' },
+            { rank: 6, name: 'moeru-ai/airi', desc: 'Self hosted, you-owned Grok Companion, a container of souls of waifu... Capable of realtime voice chat, Minecraft, Factorio playing.', lang: 'TypeScript', stars: 39620, category: 'AI虚拟伴侣' },
+            { rank: 7, name: 'Lum1104/Understand-Anything', desc: 'Graphs that teach > graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about.', lang: 'TypeScript', stars: 30202, category: '代码可视化' },
+            { rank: 8, name: 'shiyu-coder/Kronos', desc: 'Kronos: A Foundation Model for the Language of Financial Markets.', lang: 'Python', stars: 25975, category: '金融AI模型' },
+            { rank: 9, name: 'colbymchenry/codegraph', desc: 'Pre-indexed code knowledge graph for Claude Code, Codex, Cursor... fewer tokens, fewer tool calls, 100% local.', lang: 'TypeScript', stars: 24544, category: '代码知识图谱' },
+            { rank: 10, name: 'Fincept-Corporation/FinceptTerminal', desc: 'Modern finance application offering advanced market analytics, investment research, and economic data tools.', lang: 'Python', stars: 23780, category: '金融终端' },
+            { rank: 11, name: 'manaflow-ai/cmux', desc: 'Ghostty-based macOS terminal with vertical tabs and notifications for AI coding agents.', lang: 'Swift', stars: 19392, category: '终端工具' },
+            { rank: 12, name: 'Leonxlnx/taste-skill', desc: 'Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop.', lang: 'Shell', stars: 19389, category: 'AI内容优化' },
+            { rank: 13, name: 'rohitg00/ai-engineering-from-scratch', desc: 'Learn it. Build it. Ship it for others.', lang: 'Python', stars: 18110, category: 'AI工程教育' },
+            { rank: 14, name: 'anthropics/knowledge-work-plugins', desc: 'Open source repository of plugins primarily intended for knowledge workers to use in Claude Cowork.', lang: 'Python', stars: 15017, category: 'AI办公插件' },
+            { rank: 15, name: 'mukul975/Anthropic-Cybersecurity-Skills', desc: '754 structured cybersecurity skills for AI agents mapped to 5 frameworks, works with 20+ platforms.', lang: 'Python', stars: 9009, category: '网络安全' },
+            { rank: 16, name: 'Axorax/awesome-free-apps', desc: 'Curated list of the best free apps for PC and mobile.', lang: 'JavaScript', stars: 4329, category: '软件资源合集' },
+            { rank: 17, name: 'hardikpandya/stop-slop', desc: 'A skill file for removing AI tells from prose.', lang: '-', stars: 4273, category: 'AI写作优化' },
+        ];
+
+        const langData = [
+            { lang: 'TypeScript', count: 4, pct: 23.5, stars: 196599, starPct: 25.6, color: '#3178c6', desc: 'AI开发配置、代码可视化、虚拟伴侣' },
+            { lang: 'JavaScript', count: 2, pct: 11.8, stars: 196397, starPct: 25.6, color: '#f7df1e', desc: 'Agent性能优化、软件资源合集' },
+            { lang: 'Python', count: 6, pct: 35.3, stars: 133121, starPct: 17.3, color: '#3572A5', desc: '金融模型、文档管理、网络安全、教育' },
+            { lang: '无/纯配置', count: 2, pct: 11.8, stars: 158645, starPct: 20.7, color: '#8b949e', desc: 'Skills文件、写作优化规则' },
+            { lang: 'Jupyter Notebook', count: 1, pct: 5.9, stars: 43917, starPct: 5.7, color: '#DA5B0B', desc: '官方示例教程' },
+            { lang: 'Swift', count: 1, pct: 5.9, stars: 19392, starPct: 2.5, color: '#F05138', desc: '终端工具' },
+            { lang: 'Shell', count: 1, pct: 5.9, stars: 19389, starPct: 2.5, color: '#89e051', desc: 'AI内容审美优化' },
+        ];
+
+        const trends = [
+            { title: 'AI Agent配置层爆发', intensity: 5, desc: '前3名均为Agent系统级配置与优化，累计 448,673 Stars，占总榜 58.5%。社区焦点已从"调用模型"转向"编排系统提示、技能文件与工具链"，"配置即基础设施"成为主导范式。' },
+            { title: '代码知识图谱成为AI编程新标配', intensity: 4, desc: 'Understand-Anything + codegraph 合计 54,746 Stars。通过预索引代码库为知识图谱，显著降低Token消耗与工具调用次数，"图增强生成（GraphRAG）"正成为传统RAG之后的演进方向。' },
+            { title: '金融AI垂直化替代通用模型', intensity: 3, desc: 'Kronos（金融市场语言模型）+ FinceptTerminal（金融终端）合计 49,755 Stars。开源社区正针对高频、高专业度领域构建专用AI基础设施，而非依赖通用大模型。' },
+            { title: '反"AI Slop"运动兴起', intensity: 3, desc: 'taste-skill + stop-slop 合计 23,662 Stars。开发者关注点从生成效率转向输出品质与审美，消除AI同质化痕迹成为新刚需。' },
+        ];
+
+        const recommendations = [
+            { title: '技术栈选择', icon: '💻', content: 'AI应用层与工具链优先 <strong>TypeScript/JavaScript</strong>；模型训练、金融量化与数据管道继续深耕 <strong>Python</strong>；同时重视 <strong>Markdown/Skills文件</strong>作为新型配置语言的工程化管理。' },
+            { title: '产品方向', icon: '🚀', content: '1. <strong>Agent配置基础设施</strong>：开发可插拔的Skills市场、System Prompt版本管理与性能评测工具<br>2. <strong>垂直领域知识图谱</strong>：针对代码、金融、法律等高专业场景构建预索引图谱服务<br>3. <strong>AI内容后处理</strong>：布局去AI化、审美优化与风格注入工具，切入反Slop赛道' },
+            { title: '架构策略', icon: '🏗️', content: '将系统提示编排、工具链路由与记忆管理视为<strong>核心基础设施</strong>进行版本控制；评估以<strong>预计算知识图谱</strong>替代传统向量RAG，降低长上下文Token成本。' },
+            { title: '生态卡位', icon: '🎯', content: '紧跟Claude Code/Cursor等主流Agent平台的插件规范，早期进入其Skills/Plugin市场；金融终端与代码可视化是当前Stars转化率最高的两大细分入口。' },
+        ];
+
+        // ===== HELPERS =====
+        function formatStars(n) {
+            if (n >= 10000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'k';
+            return n.toLocaleString();
+        }
+
+        function getRankClass(rank) {
+            if (rank === 1) return 'rank-gold';
+            if (rank === 2) return 'rank-silver';
+            if (rank === 3) return 'rank-bronze';
+            return 'rank-normal';
+        }
+
+        function getLangColor(lang) {
+            const map = {
+                'JavaScript': '#f7df1e',
+                'TypeScript': '#3178c6',
+                'Python': '#3572A5',
+                'Swift': '#F05138',
+                'Shell': '#89e051',
+                'Jupyter Notebook': '#DA5B0B',
+            };
+            return map[lang] || '#8b949e';
+        }
+
+        function getLangDot(lang) {
+            const color = getLangColor(lang);
+            return `<span class="inline-block w-2.5 h-2.5 rounded-full mr-2" style="background:${color};box-shadow:0 0 6px ${color}66;"></span>`;
+        }
+
+        // ===== RENDER TOP 3 =====
+        const top3 = projects.slice(0, 3);
+        const top3Container = document.getElementById('top3-container');
+        top3.forEach((p, i) => {
+            const medal = ['🥇', '🥈', '🥉'][i];
+            const card = document.createElement('div');
+            card.className = 'project-card p-6 flex flex-col h-full';
+            card.style.animationDelay = `${0.5 + i * 0.1}s`;
+            card.innerHTML = `
+                <div class="card-glow"></div>
+                <div class="relative z-10 flex flex-col h-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="${getRankClass(p.rank)} w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-white shadow-lg">
+                                ${p.rank}
+                            </div>
+                            <span class="text-2xl">${medal}</span>
+                        </div>
+                        <span class="tag-pill text-xs" style="background:rgba(255,255,255,0.05);color:var(--text-muted);border:1px solid var(--border-subtle);">${p.category}</span>
+                    </div>
+                    <a href="https://github.com/${p.name}" target="_blank" class="text-base font-bold text-white hover:text-blue-400 transition-colors mb-2 link-hover break-all">${p.name}</a>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-5 flex-1 line-clamp-3">${p.desc}</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div class="flex items-center gap-2">
+                            ${p.lang !== '-' ? getLangDot(p.lang) : ''}
+                            <span class="text-xs text-slate-500 font-mono">${p.lang}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <span class="star-count text-lg font-bold">${formatStars(p.stars)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            top3Container.appendChild(card);
+        });
+
+        // ===== RENDER TABLE =====
+        const tbody = document.getElementById('project-table-body');
+        projects.forEach((p, i) => {
+            const tr = document.createElement('tr');
+            tr.style.animationDelay = `${0.6 + i * 0.03}s`;
+            tr.className = 'animate-fade-in';
+            tr.innerHTML = `
+                <td class="text-center">
+                    <span class="${getRankClass(p.rank)} inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold text-white">
+                        ${p.rank}
+                    </span>
+                </td>
+                <td>
+                    <a href="https://github.com/${p.name}" target="_blank" class="font-semibold text-sm link-hover break-all">${p.name}</a>
+                </td>
+                <td class="hidden lg:table-cell text-slate-400 max-w-md">${p.desc}</td>
+                <td class="text-center">
+                    <div class="flex items-center justify-center">
+                        ${p.lang !== '-' ? getLangDot(p.lang) : '<span class="w-2.5 h-2.5 rounded-full bg-slate-600 mr-2 inline-block"></span>'}
+                        <span class="text-xs text-slate-500 font-mono">${p.lang}</span>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="flex items-center justify-end gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-orange-500/70" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <span class="star-count font-bold text-sm">${formatStars(p.stars)}</span>
+                    </div>
+                </td>
+                <td class="hidden sm:table-cell">
+                    <span class="tag-pill text-xs" style="background:rgba(255,255,255,0.04);color:var(--text-secondary);border:1px solid var(--border-subtle);">${p.category}</span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // ===== RENDER LANGUAGE CARDS =====
+        const langContainer = document.getElementById('lang-cards');
+        langData.forEach((l, i) => {
+            const card = document.createElement('div');
+            card.className = 'project-card p-5';
+            card.style.animationDelay = `${0.7 + i * 0.08}s`;
+            card.innerHTML = `
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="inline-block w-3 h-3 rounded-full" style="background:${l.color};box-shadow:0 0 10px ${l.color}80;"></span>
+                            <span class="font-bold text-white">${l.lang}</span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">${l.count} 项目</span>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-slate-500">项目占比</span>
+                            <span class="text-white font-mono font-semibold">${l.pct}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                            <div class="lang-bar h-2 rounded-full" style="width: ${l.pct}%; background: linear-gradient(90deg, ${l.color}88, ${l.color}); animation: barGrow 1s cubic-bezier(0.16,1,0.3,1) ${0.8 + i * 0.1}s both;"></div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-slate-500">Stars 占比</span>
+                            <span class="text-orange-400 font-mono font-semibold">${l.starPct}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                            <div class="lang-bar h-2 rounded-full" style="width: ${l.starPct}%; background: linear-gradient(90deg, #fb923c88, #ea580c); animation: barGrow 1s cubic-bezier(0.16,1,0.3,1) ${1 + i * 0.1}s both;"></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">${l.desc}</p>
+                </div>
+            `;
+            langContainer.appendChild(card);
+        });
+
+        // ===== RENDER TREND CARDS =====
+        const trendContainer = document.getElementById('trend-cards');
+        trends.forEach((t, i) => {
+            const fires = '🔥'.repeat(t.intensity);
+            const card = document.createElement('div');
+            card.className = 'trend-card p-6';
+            card.style.animationDelay = `${0.8 + i * 0.1}s`;
+            card.innerHTML = `
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-bold text-white text-sm leading-snug pr-4">${t.title}</h3>
+                        <span class="text-lg tracking-tight" title="热度: ${t.intensity}/5">${fires}</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">${t.desc}</p>
+                </div>
+            `;
+            trendContainer.appendChild(card);
+        });
+
+        // ===== RENDER RECOMMENDATIONS =====
+        const recContainer = document.getElementById('recommend-cards');
+        recommendations.forEach((r, i) => {
+            const card = document.createElement('div');
+            card.className = 'project-card p-6';
+            card.style.animationDelay = `${0.9 + i * 0.1}s`;
+            card.innerHTML = `
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">${r.icon}</span>
+                        <h3 class="font-bold text-white">${r.title}</h3>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">${r.content}</p>
+                </div>
+            `;
+            recContainer.appendChild(card);
+        });
+
+        // ===== MOUSE GLOW EFFECT =====
+        document.querySelectorAll('.project-card, .trend-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--mouse-x', `${x}%`);
+                card.style.setProperty('--mouse-y', `${y}%`);
+            });
+        });
+
+        // ===== INTERSECTION OBSERVER for scroll animations =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-fade-in-up, .animate-fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+        
+        // Trigger initial visible elements
+        setTimeout(() => {
+            document.querySelectorAll('.animate-fade-in-up, .animate-fade-in').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.style.animationPlayState = 'running';
+                }
+            });
+        }, 100);
+    </script>
+</body>
+</html>
