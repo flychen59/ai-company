@@ -21,8 +21,8 @@ os.environ["http_proxy"] = "http://127.0.0.1:7897"
 
 from tools.search_tools import github_trending
 
-API_URL = "https://yutou.virtualgoods.top/v1/chat/completions"
-API_KEY = "sk-o9nGSiite6eroOpxPdCvD5bZxa3lDkVhW8Fpkzi52GV6rOqe"
+API_URL = "https://tinyapi.nykjsd.cn/v1/chat/completions"
+API_KEY=os.environ.get("OPENAI_API_KEY", "***")
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json",
@@ -38,12 +38,13 @@ def call_llm(system: str, user: str, timeout: int = 300) -> str:
                 API_URL,
                 headers=HEADERS,
                 json={
-                    "model": "moonshotai/kimi-k2.6",
+                    "model": "glm-5-turbo",
                     "messages": [
                         {"role": "system", "content": system},
                         {"role": "user", "content": user},
                     ],
                     "temperature": 0.3,
+                    "max_tokens": 16384,
                 },
                 proxies={"https": "http://127.0.0.1:7897"},
                 timeout=timeout,
