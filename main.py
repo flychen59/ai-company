@@ -22,7 +22,7 @@ os.environ["http_proxy"] = "http://127.0.0.1:7897"
 from tools.search_tools import github_trending
 
 API_URL = "https://tinyapi.nykjsd.cn/v1/chat/completions"
-API_KEY=os.environ.get("OPENAI_API_KEY", "***")
+API_KEY = os.environ.get("OPENAI_API_KEY", "")
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json",

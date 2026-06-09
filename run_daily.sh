@@ -3,7 +3,7 @@
 # 由 Hermes cronjob 每天早上 8 点触发
 
 cd ~/ai-company
-source ~/.bashrc 2>/dev/null
+source ~/.zshrc 2>/dev/null
 source .venv/bin/activate
 
 echo "🚀 开始生成 $(date +%Y-%m-%d) 日报..."
